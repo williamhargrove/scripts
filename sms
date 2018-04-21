@@ -1,0 +1,27 @@
+#!/usr/bin/python2
+
+from smtplib import SMTP
+import datetime
+import os
+import sys
+
+debuglevel = 0
+
+smtp = SMTP()
+smtp.set_debuglevel(debuglevel)
+smtp.connect('<smtp server>',587)
+
+from_addr = "Monit SMS <email@address>"
+to_addr = "<number>@my.fastsms.co.uk"
+
+subj = "Monit-SMS"
+msg_text="Monit %s %s at %s on %s: %s." % (os.environ.get('MONIT_EVENT'), os.environ.get('MONIT_SERVICE'), os.environ.get('MONIT_DATE'), os.environ.get('MONIT_HOST'), os.environ.get('MONIT_DESCRIPTION'))
+
+date = datetime.datetime.now().strftime( "%d/%m/%Y %H:%M" )
+
+message_text = "<user_key>\n<api_key>\n%s\n" % ( msg_text )
+
+msg = "From: %s\nTo: %s\nSubject: %s\nDate: %s\n\n%s" % ( from_addr, to_addr, subj, date, message_text )
+
+smtp.sendmail(from_addr, to_addr, msg)
+smtp.quit()
