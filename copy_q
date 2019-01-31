@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]; then
+ echo "<queue> <message count>"
+ exit 1
+fi
+
+QUEUE=$1
+MSG_COUNT=$2 
+
+. ./env.sh
+
+ssh -NL 15672:${RMQ}:15672 williamh@${NAT} &
+TUNNEL_PID=$!
+
+sleep 1
+
+python ${HOME}/rabbitmqadmin -u${RMQ_USER} -p ${RMQ_PASSWORD} get queue=${QUEUE} count=${MSG_COUNT} --format=pretty_json > copy.${QUEUE}.q
+
+kill ${TUNNEL_PID}

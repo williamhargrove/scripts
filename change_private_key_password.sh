@@ -1,0 +1,1 @@
+﻿cat [OLD_PASSWORD_PROTECTED_PRIVKEY_PATH].asc | gpg -d | gpg -a -c > [NEW_PASSWORD_PROTECTED_PRIVKEY_PATH].asc"
